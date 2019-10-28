@@ -92,6 +92,12 @@ while(1):
 
         time.sleep(3)
         driver.implicitly_wait(10)
+        nc = driver.find_elements_by_class_name("nc-rank-link")
+        # print(len(nc))
+        nc[1].click()
+
+        time.sleep(3)
+        driver.implicitly_wait(10)
         # 点击第一个课程
         driver.find_element_by_xpath("/html/body[@class='redesign-course-center-body']/section[@id='courseCenterBody']/article[@class='cl-container nc-lectuer']/div[@id='searchCourseBody']/ul[@class='nc-course-list']/li[@class='nc-course-card   '][1]/a/div[@class='card-body']/h3[@class='card-title']").click()
 
