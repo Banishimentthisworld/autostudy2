@@ -1,3 +1,4 @@
+
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 import time
@@ -5,7 +6,8 @@ from selenium.webdriver.chrome.options import Options
 #coding=utf-8
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
-
+username = input("username:")
+password = input("password:")
 
 def study(driver):
     finish_flag = 1000
@@ -56,8 +58,8 @@ while(1):
         time.sleep(3)
         driver.implicitly_wait(10)
         driver.maximize_window()
-        driver.find_element_by_xpath("//input[@id='loginName']").send_keys('1157830')
-        driver.find_element_by_xpath("//input[@id='password']").send_keys('1157830')
+        driver.find_element_by_xpath("//input[@id='loginName']").send_keys(username)
+        driver.find_element_by_xpath("//input[@id='password']").send_keys(password)
         driver.implicitly_wait(10)
         driver.find_element_by_xpath("//input[@class='btn']").click()
 
@@ -175,6 +177,8 @@ while(1):
         flag = btn[1].get_attribute("onclick")
         while(flag == None):
             print(flag)
+            driver.refresh()
+            study(driver)
         flag = btn[1].click()
 
         # 获取打开的多个窗口句柄
