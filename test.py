@@ -29,23 +29,34 @@ def study(driver):
         courses_Learn = driver.find_elements_by_class_name("item-no")
         print("未学习章节：", len(courses_Learn))
 
-        # 点击第一个未学习的课程
-        if len(courses_Learn) != 0:
-            courses_Learn[0].click()
-            time.sleep(5)
-            # 正在学习的章节
-            courser_learning = driver.find_element_by_class_name("cl-catalog-playing")
-            print("正在学习的章节：", courser_learning.get_attribute("title"))
-            # 每15秒检查观看时间时候是否达标
-            while int(driver.find_element_by_id("minStudyTime").text) > int(driver.find_element_by_id("studiedTime").text):
+        # 只有一个章节的课程
+        if len(courses) == 0:
+            print("这个课只有一章惹")
+            while int(driver.find_element_by_id("minStudyTime").text) > int(
+                    driver.find_element_by_id("studiedTime").text):
                 study_time = driver.find_element_by_id("minStudyTime").text
                 studied_time = driver.find_element_by_id("studiedTime").text
                 print("\r" + "需学习时间：" + study_time + "  已学习时间：" + studied_time, end="")
                 time.sleep(15)
 
         else:
-            # 完成学习
-            finish_flag = 0
+            # 点击第一个未学习的课程
+            if len(courses_Learn) != 0:
+                courses_Learn[0].click()
+                time.sleep(5)
+                # 正在学习的章节
+                courser_learning = driver.find_element_by_class_name("cl-catalog-playing")
+                print("正在学习的章节：", courser_learning.get_attribute("title"))
+                # 每15秒检查观看时间时候是否达标
+                while int(driver.find_element_by_id("minStudyTime").text) > int(driver.find_element_by_id("studiedTime").text):
+                    study_time = driver.find_element_by_id("minStudyTime").text
+                    studied_time = driver.find_element_by_id("studiedTime").text
+                    print("\r" + "需学习时间：" + study_time + "  已学习时间：" + studied_time, end="")
+                    time.sleep(15)
+
+            else:
+                # 完成学习
+                finish_flag = 0
 
         print("\n·····················梓锴牛逼·····················")
     print("所有课程已经完成学习")
@@ -81,7 +92,7 @@ while(1):
         time.sleep(5)
         driver.implicitly_wait(10)
 
-
+        driver.close()
         windows = driver.window_handles
         # 切换到当前最新打开的窗口
         driver.switch_to.window(windows[-1])
@@ -121,7 +132,7 @@ while(1):
         driver.implicitly_wait(10)
         # 点击第一个课程
         driver.find_element_by_xpath("/html/body[@class='redesign-course-center-body']/section[@id='courseCenterBody']/article[@class='cl-container nc-lectuer']/div[@id='searchCourseBody']/ul[@class='nc-course-list']/li[@class='nc-course-card   '][1]/a/div[@class='card-body']/h3[@class='card-title']").click()
-
+        driver.close()
         # 获取打开的多个窗口句柄
         windows = driver.window_handles
         # 切换到当前最新打开的窗口
@@ -136,6 +147,7 @@ while(1):
         driver.implicitly_wait(10)
         # 点击确定
         driver.find_element_by_xpath("/html/body/div[@id='layui-layer1']/div[@class='layui-layer-btn']/a[@class='layui-layer-btn0']").click()
+
 
         # 获取打开的多个窗口句柄
         windows = driver.window_handles
