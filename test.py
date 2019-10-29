@@ -38,6 +38,7 @@ def study(driver):
                 studied_time = driver.find_element_by_id("studiedTime").text
                 print("\r" + "需学习时间：" + study_time + "  已学习时间：" + studied_time, end="")
                 time.sleep(15)
+            finish_flag = 0
 
         else:
             # 点击第一个未学习的课程
