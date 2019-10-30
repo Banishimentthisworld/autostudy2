@@ -21,17 +21,18 @@ def study(driver):
         print("课程标题：", courseTitle.get_attribute("title"))
         # 获取课程章节总数
         courses = driver.find_elements_by_class_name("cl-catalog-item")
-        print("课程章节：", len(courses))
+        print("课程大章节：", len(courses))
         # 获取以学习章节数量
         courses_Learned = driver.find_elements_by_class_name("cl-catalog-link-done")
-        print("已学习章节：", len(courses_Learned))
+        print("已学习小章节：", len(courses_Learned))
         # 获取未学习章节数量
         courses_Learn = driver.find_elements_by_class_name("item-no")
-        print("未学习章节：", len(courses_Learn))
+        print("未学习小章节：", len(courses_Learn))
+
 
         # 只有一个章节的课程
         if len(courses) == 0:
-            print("这个课只有一章惹")
+            print("这个课只有一个小课程惹")
             while int(driver.find_element_by_id("minStudyTime").text) > int(
                     driver.find_element_by_id("studiedTime").text):
                 study_time = driver.find_element_by_id("minStudyTime").text
@@ -55,6 +56,7 @@ def study(driver):
                     print("\r" + "需学习时间：" + study_time + "  已学习时间：" + studied_time, end="")
                     time.sleep(15)
 
+
             else:
                 # 完成学习
                 finish_flag = 0
@@ -63,7 +65,7 @@ def study(driver):
     print("所有课程已经完成学习")
 
 while(1):
-    try:
+    # try:
         import time
         driver = webdriver.Chrome()
         driver.get("http://sunnyoptical.21tb.com/login/login.logout.do")
@@ -125,6 +127,27 @@ while(1):
 
         time.sleep(3)
         driver.implicitly_wait(10)
+        # 点击展开
+        driver.find_element_by_xpath("//a[@class='nc-spread pull-right']").click()
+
+
+        time.sleep(3)
+        driver.implicitly_wait(10)
+        # 点击电脑端
+        driver.find_element_by_xpath("//div[@class='nc-filter-wrap']/dl[@class='nc-filter-option'][1]/dd[@class='option-item'][1]").click()
+
+        time.sleep(3)
+        driver.implicitly_wait(10)
+        # 点击2018
+        driver.find_element_by_xpath("//div[@class='nc-filter-wrap']/dl[@class='nc-filter-option'][2]/dd[@class='option-item'][2]").click()
+
+        time.sleep(3)
+        driver.implicitly_wait(10)
+        # 点击2017
+        nc = driver.find_element_by_xpath("//div[@class='nc-filter-wrap']/dl[@class='nc-filter-option'][2]/dd[@class='option-item'][3]").click()
+
+        time.sleep(3)
+        driver.implicitly_wait(10)
         nc = driver.find_elements_by_class_name("nc-rank-link")
         # print(len(nc))
         nc[1].click()
@@ -132,8 +155,10 @@ while(1):
         time.sleep(3)
         driver.implicitly_wait(10)
         # 点击第一个课程
-        driver.find_element_by_xpath("/html/body[@class='redesign-course-center-body']/section[@id='courseCenterBody']/article[@class='cl-container nc-lectuer']/div[@id='searchCourseBody']/ul[@class='nc-course-list']/li[@class='nc-course-card   '][1]/a/div[@class='card-body']/h3[@class='card-title']").click()
+        kechengs = driver.find_elements_by_class_name("nc-course-card")
+        kechengs[0].click()
         driver.close()
+
         # 获取打开的多个窗口句柄
         windows = driver.window_handles
         # 切换到当前最新打开的窗口
@@ -187,10 +212,11 @@ while(1):
 
         # 判断课程评价按钮是否能按下
         btn = driver.find_elements_by_class_name("cs-menu-link")
-        flag = btn[1].get_attribute("onclick")
-        while(flag == None):
+
+        while( btn[1].get_attribute("onclick") == None):
             print(flag)
             driver.refresh()
+            time.sleep(5)
             study(driver)
         flag = btn[1].click()
 
@@ -223,6 +249,6 @@ while(1):
         time.sleep(5)
         driver.implicitly_wait(10)
         driver.quit()
-    except:
-        print("失败")
-        driver.quit()
+    # except:
+    #     print("失败")
+    #     driver.quit()
