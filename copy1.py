@@ -29,8 +29,6 @@ def study(driver):
         courses_Learn = driver.find_elements_by_class_name("item-no")
         print("未学习章节：", len(courses_Learn))
 
-        # 没有分章节的课程
-
         # 点击第一个未学习的课程
         if len(courses_Learn) != 0:
             courses_Learn[0].click()
