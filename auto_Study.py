@@ -1,10 +1,13 @@
+import sys
+
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 import time
-import datetime
 from selenium.webdriver.chrome.options import Options
 #coding=utf-8
 from selenium import webdriver
+import datetime
+import os
 from selenium.webdriver.common.action_chains import ActionChains
 username = input("username:")
 password = input("password:")
@@ -65,7 +68,7 @@ def study(driver):
     print("所有课程已经完成学习")
 
 while(1):
-    # try:
+     try:
         import time
         driver = webdriver.Chrome()
         driver.get("http://sunnyoptical.21tb.com/login/login.logout.do")
@@ -101,23 +104,66 @@ while(1):
         driver.switch_to.window(windows[-1])
         driver.implicitly_wait(20)
 
-        # 点击个人中心
         time.sleep(3)
         driver.implicitly_wait(10)
+        # 点击个人中心
         driver.find_element_by_xpath("//a[@class='pull-right nc-head-cell personal-center']").click()
 
-        # 点击学习档案
+        # 切换到当前最新打开的窗口
+        windows = driver.window_handles
+        driver.switch_to.window(windows[-1])
+        driver.implicitly_wait(20)
+
         time.sleep(3)
         driver.implicitly_wait(10)
+        # 点击学习档案
         driver.find_element_by_xpath("//li[@class='tbc-u-nav-item'][1]/a").click()
 
+        time.sleep(3)
+        driver.implicitly_wait(10)
+        # 点击自定义
+        driver.find_element_by_xpath("//ul[@id='userScreenNav']/li[@id='screenCustomBtn']").click()
+
+        # 获取上周六日期
+        today = datetime.date.today()
+        today.weekday()
+        if today.weekday() == 5:
+            lastFridaydays = 0
+        elif today.weekday() == 6:
+            lastFridaydays = 1
+        else:
+            lastFridaydays = -(today.weekday() + 2)
+        lastFriday = (datetime.date.today() + datetime.timedelta(days=lastFridaydays)).strftime('%Y-%m-%d')
+
         # 输入日期
+        driver.find_element_by_xpath("//input[@id='starTimeDate']").send_keys(lastFriday)
 
         time.sleep(3)
         driver.implicitly_wait(10)
-        driver.find_element_by_xpath("//input[@id='starTimeDate']").send_keys(TimeDate)
+        # 点击筛选
+        driver.find_element_by_xpath("//button[@id='screenCustomBtnFilter']").click()
 
-        # 点击全部课程
+        time.sleep(3)
+        driver.implicitly_wait(10)
+
+        exit_flag = 0
+        # 判断学分获得情况
+        if float(driver.find_element_by_id("over_score").text) >= 50:
+            # 结束程序
+            print("----------------------------账号" + username +"本周学习已达标----------------------------")
+            driver.quit()
+            exit_flag = 1
+        else:
+            print("----------------------------账号" + username +"本周学习已获得学分:" + driver.find_element_by_id("over_score").text + "----------------------------")
+            driver.close()
+            windows = driver.window_handles
+            # 切换到当前最新打开的窗口
+            driver.switch_to.window(windows[-1])
+            driver.implicitly_wait(20)
+
+        time.sleep(3)
+        driver.implicitly_wait(10)
+# 点击全部课程
         try:
             driver.find_element_by_xpath("/html/body[@class='redesign-course-center-body']/header[@class='nc-header cl-container redesign-course-center']/div[@class='nc-header-inner']/nav[@class='nc-nav cl-container redesign-course-nav']/div[@class='nc-nav-container']/div[@class='nc-menu-container']/div[@id='ncMenuHead']/a[@class='nc-menu-head-link']")
             b = True
@@ -179,7 +225,6 @@ while(1):
         # 获取打开的多个窗口句柄
         windows = driver.window_handles
         # 切换到当前最新打开的窗口
-
         driver.switch_to.window(windows[-1])
 
         time.sleep(3)
@@ -190,7 +235,8 @@ while(1):
         time.sleep(3)
         driver.implicitly_wait(10)
         # 点击确定
-        driver.find_element_by_xpath("/html/body/div[@id='layui-layer1']/div[@class='layui-layer-btn']/a[@class='layui-layer-btn0']").click()
+        driver.find_element_by_xpath("//a[@class='layui-layer-btn0']").click()
+
 
         # 获取打开的多个窗口句柄
         windows = driver.window_handles
@@ -266,6 +312,9 @@ while(1):
         time.sleep(5)
         driver.implicitly_wait(10)
         driver.quit()
-    # except:
-    #     print("失败")
-    #     driver.quit()
+     except:
+         if exit_flag == 1:
+             sys.exit(0)
+         else:
+            print("失败")
+            driver.quit()
